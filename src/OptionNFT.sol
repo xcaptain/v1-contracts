@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.23;
 
-import "solmate/tokens/ERC721.sol";
-import { Owned } from "solmate/auth/Owned.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
-contract OptionNFT is ERC721, Owned(msg.sender) {
+contract OptionNFT is ERC721, Ownable {
     uint256 public currentTokenId;
 
     address public channelAddress;
@@ -12,7 +12,7 @@ contract OptionNFT is ERC721, Owned(msg.sender) {
     constructor(
         string memory _name,
         string memory _symbol
-    ) ERC721(_name, _symbol) {}
+    ) ERC721(_name, _symbol) Ownable(msg.sender) {}
 
     function updateChannel(address _channel) public onlyOwner {
         channelAddress = _channel;

@@ -3,7 +3,8 @@ pragma solidity ^0.8.23;
 
 import {Script, console2} from "forge-std/Script.sol";
 import {TokenVault} from "../src/TokenVault.sol";
-import "solmate/tokens/ERC20.sol";
+import {ERC20} from "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
 contract TokenVaultScript is Script {
     function setUp() public {}
