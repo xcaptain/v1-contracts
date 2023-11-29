@@ -7,6 +7,10 @@ import {ERC4626} from "openzeppelin-contracts/contracts/token/ERC20/extensions/E
 import {OptionNFT} from "./OptionNFT.sol";
 
 contract TokenVault is ERC4626 {
+    // 一个期权是否已经行权
+    mapping(address => mapping(uint256 => bool)) public optionExercised;
+
+    // TODO: 依赖 IERC20 还是 ERC20 ？？
     constructor(
         IERC20 _asset,
         string memory _name,
