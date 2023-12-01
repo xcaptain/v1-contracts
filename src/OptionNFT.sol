@@ -14,17 +14,19 @@ import "./ITokenVault.sol";
 contract CallOptionNFT is ERC721, Ownable {
     uint256 public currentTokenId; // TODO: uint64 是否够大？
 
-    mapping(uint256 => bool) public exercised; // 这张期权是否已行权， 是否要放到 Metadata 里面？？？
-
-    ICallOptionVault public targetAsset;
+    IERC20 public targetAsset;
     IERC20 public strikeAsset;
 
     struct Metadata {
         uint256 strikeAssetAmount;
         uint256 targetAssetAmount;
         uint maturityDate;
+        bool exercised;
     }
     mapping(uint256 => Metadata) public tokenMetadata;
+
+    // TODO: 是否要细化错误类型？？？锁定的资产转账失败
+    error TransferFailed();
 
     constructor(
         address _targetAsset,
@@ -32,7 +34,7 @@ contract CallOptionNFT is ERC721, Ownable {
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) Ownable(msg.sender) {
-        targetAsset = ICallOptionVault(_targetAsset);
+        targetAsset = IERC20(_targetAsset);
         strikeAsset = IERC20(_strikeAsset);
     }
 
@@ -63,19 +65,28 @@ contract CallOptionNFT is ERC721, Ownable {
         uint256 newItemId = ++currentTokenId;
         _safeMint(recipient, newItemId);
 
-        targetAsset.lock(recipient, targetAssetAmount, newItemId);
+        if (
+            !targetAsset.transferFrom(
+                msg.sender,
+                address(this),
+                targetAssetAmount
+            )
+        ) {
+            revert TransferFailed();
+        }
 
         // 保存行权信息，便于未来读取
         tokenMetadata[newItemId] = Metadata({
             strikeAssetAmount: strikeAssetAmount,
             targetAssetAmount: targetAssetAmount,
-            maturityDate: maturityDate
+            maturityDate: maturityDate,
+            exercised: false
         });
         return newItemId;
     }
 
     function isExercised(uint256 tokenId) public view returns (bool) {
-        return exercised[tokenId];
+        return tokenMetadata[tokenId].exercised;
     }
 
     // 看涨期权到期日，买家进行行权
@@ -96,9 +107,56 @@ contract CallOptionNFT is ERC721, Ownable {
             "ERC721: token expired"
         );
 
-        targetAsset.exercise(msg.sender, tokenId);
+        // TODO: 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
+        if (
+            !strikeAsset.transferFrom(
+                msg.sender,
+                ownerOf(tokenId),
+                tokenMetadata[tokenId].strikeAssetAmount
+            )
+        ) {
+            revert TransferFailed();
+        }
+        if (
+            !targetAsset.transferFrom(
+                address(this),
+                msg.sender,
+                tokenMetadata[tokenId].targetAssetAmount
+            )
+        ) {
+            revert TransferFailed();
+        }
 
-        exercised[tokenId] = true;
+        tokenMetadata[tokenId].exercised = true;
+
+        // TODO: burn erc721 token
+        _burn(tokenId);
+    }
+
+    // 过了行权日，没人行权，卖家赎回锁定的资产
+    function redeem(uint256 tokenId) public {
+        require(
+            ownerOf(tokenId) == msg.sender,
+            "ERC721: caller is not the owner"
+        );
+        require(!isExercised(tokenId), "ERC721: token already exercised");
+
+        // 欧式期权只有到期日才能行权
+        require(
+            block.timestamp > tokenMetadata[tokenId].maturityDate + 1 days,
+            "ERC721: token not expired yet"
+        );
+
+        if (
+            !targetAsset.transferFrom(
+                address(this),
+                msg.sender,
+                tokenMetadata[tokenId].targetAssetAmount
+            )
+        ) {
+            revert TransferFailed();
+        }
+        _burn(tokenId);
     }
 
     function _createTokenURI(
@@ -155,6 +213,7 @@ contract CallOptionNFT is ERC721, Ownable {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
+        require(tokenId < currentTokenId, "ERC721: invalid tokenId");
         return _createTokenURI(tokenId);
     }
 }
