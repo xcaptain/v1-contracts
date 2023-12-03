@@ -62,7 +62,7 @@ contract CallOptionNFT is ERC721, Ownable {
         );
 
         address recipient = msg.sender;
-        uint256 newItemId = ++currentTokenId;
+        uint256 newItemId = currentTokenId++;
         _safeMint(recipient, newItemId);
 
         if (
@@ -165,7 +165,7 @@ contract CallOptionNFT is ERC721, Ownable {
         string memory attributes = string.concat(
             '[{"trait_type":"maturityDate","value":',
             Strings.toString(tokenMetadata[tokenId].maturityDate),
-            ',"display_type":"number"},{"trait_type":"strikeAssetAmount","value":',
+            ',"display_type":"date"},{"trait_type":"strikeAssetAmount","value":',
             Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
             ',"display_type":"number"},{"trait_type":"targetAssetAmount","value":',
             Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
@@ -212,7 +212,6 @@ contract CallOptionNFT is ERC721, Ownable {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
-        require(tokenId < currentTokenId, "ERC721: invalid tokenId");
         return _createTokenURI(tokenId);
     }
 }
