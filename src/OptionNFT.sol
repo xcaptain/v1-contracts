@@ -165,7 +165,7 @@ contract CallOptionNFT is ERC721, Ownable {
         string memory attributes = string.concat(
             '[{"trait_type":"maturityDate","value":',
             Strings.toString(tokenMetadata[tokenId].maturityDate),
-            '"display_type":"number"},{"trait_type":"strikeAssetAmount","value":',
+            ',"display_type":"number"},{"trait_type":"strikeAssetAmount","value":',
             Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
             ',"display_type":"number"},{"trait_type":"targetAssetAmount","value":',
             Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
@@ -199,9 +199,8 @@ contract CallOptionNFT is ERC721, Ownable {
                                 '"image": "',
                                 image_url,
                                 '", ',
-                                '"attributes": "',
+                                '"attributes":',
                                 attributes,
-                                '", ',
                                 "}"
                             )
                         )

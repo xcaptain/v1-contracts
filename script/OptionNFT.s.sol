@@ -14,10 +14,10 @@ contract OptionNFTScript is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         new CallOptionNFT(
-            address(0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9),
-            address(0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9),
-            "vault ETH",
-            "vETH"
+            address(0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9), // WETH
+            address(0xFCAE2250864A678155f8F4A08fb557127053E59E), // TESTUSDC
+            "WETH-USDC Options",
+            "WETHUSDC"
         );
 
         vm.stopBroadcast();
