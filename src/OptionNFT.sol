@@ -18,8 +18,8 @@ contract CallOptionNFT is ERC721, Ownable {
     IERC20 public strikeAsset;
 
     struct Metadata {
-        uint256 strikeAssetAmount;
-        uint256 targetAssetAmount;
+        uint256 strikeAssetAmount; // usdt
+        uint256 targetAssetAmount; // weth
         uint maturityDate;
         bool exercised;
     }

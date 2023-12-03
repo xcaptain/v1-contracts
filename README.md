@@ -51,6 +51,9 @@ $ anvil
 source .env
 
 forge script script/TokenVault.s.sol:TokenVaultScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署测试的usdc合约
+forge script script/TestUSDC.s.sol:TestUSDCScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 ```
 
 ### Cast
