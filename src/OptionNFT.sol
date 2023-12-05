@@ -3,15 +3,13 @@ pragma solidity ^0.8.23;
 
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 import "./ITokenVault.sol";
 
 // 看涨期权的合约
-// TODO: 新增一个交易对应该由社区来投票表决，避免乱七八糟的交易对加入
-// TODO: 是否需要Ownable? 是否需要管理员来管理交易对？
-contract CallOptionNFT is ERC721, Ownable {
+// TODO: 是否需要Upgradable
+contract CallOptionNFT is ERC721 {
     uint256 public currentTokenId; // TODO: uint64 是否够大？
 
     IERC20 public targetAsset;
@@ -33,7 +31,7 @@ contract CallOptionNFT is ERC721, Ownable {
         address _strikeAsset,
         string memory _name,
         string memory _symbol
-    ) ERC721(_name, _symbol) Ownable(msg.sender) {
+    ) ERC721(_name, _symbol) {
         targetAsset = IERC20(_targetAsset);
         strikeAsset = IERC20(_strikeAsset);
     }
@@ -212,6 +210,7 @@ contract CallOptionNFT is ERC721, Ownable {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
+        require(tokenId < currentTokenId, string.concat("ERC721: invalid tokenId, max: ", Strings.toString(tokenId)));
         return _createTokenURI(tokenId);
     }
 }
