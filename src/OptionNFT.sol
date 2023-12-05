@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
-import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 import "./ITokenVault.sol";
@@ -12,8 +12,8 @@ import "./ITokenVault.sol";
 contract CallOptionNFT is ERC721 {
     uint256 public currentTokenId; // TODO: uint64 是否够大？
 
-    IERC20 public targetAsset;
-    IERC20 public strikeAsset;
+    ERC20 public targetAsset;
+    ERC20 public strikeAsset;
 
     struct Metadata {
         uint256 strikeAssetAmount; // usdt
@@ -32,8 +32,8 @@ contract CallOptionNFT is ERC721 {
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) {
-        targetAsset = IERC20(_targetAsset);
-        strikeAsset = IERC20(_strikeAsset);
+        targetAsset = ERC20(_targetAsset);
+        strikeAsset = ERC20(_strikeAsset);
     }
 
     // 铸造一个看涨期权NFT，属性里包含：
@@ -173,10 +173,15 @@ contract CallOptionNFT is ERC721 {
             "#OptionNFT ",
             Strings.toString(tokenId)
         );
+
         string memory image = string.concat(
-            '<svg xmlns="http://www.w3.org/2000/svg"><text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">',
-            name,
-            "</text></svg>"
+            unicode'<svg viewBox="0 0 400 400"><text class="h1" x="50" y="70">▲ # ',
+            Strings.toString(tokenId),
+            unicode'</text><text x="70" y="240" style="font-size:100px">🌻</text><text x="70" y="300">BUY ',
+            Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
+            ' WETH</text><text x="70" y="320">AT ',
+            Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
+            " USDC</text></svg>"
         );
         string memory image_url = string.concat(
             "data:image/svg+xml;base64,",
@@ -210,7 +215,13 @@ contract CallOptionNFT is ERC721 {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
-        require(tokenId < currentTokenId, string.concat("ERC721: invalid tokenId, max: ", Strings.toString(tokenId)));
+        require(
+            tokenId < currentTokenId,
+            string.concat(
+                "ERC721: invalid tokenId, max: ",
+                Strings.toString(tokenId)
+            )
+        );
         return _createTokenURI(tokenId);
     }
 }
