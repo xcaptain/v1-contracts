@@ -50,13 +50,16 @@ $ anvil
 ```shell
 source .env
 
-forge script script/TokenVault.s.sol:TokenVaultScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
-
 # 部署测试的usdc合约
 forge script script/TestUSDC.s.sol:TestUSDCScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 
 # 部署看涨期权合约
 forge script script/OptionNFT.s.sol:OptionNFTScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+```
+
+### Manually Verify
+```shell
+forge verify-contract --watch --chain-id 11155111 --constructor-args $(cast abi-encode "constructor(address,address,string,string)" 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 0xFCAE2250864A678155f8F4A08fb557127053E59E "WETH-USDC Options" "WETHUSDC") 0x1773d25e51ffac3d188842824f22c4f8bb963586 src/OptionNFT.sol:CallOptionNFT
 ```
 
 ### Cast
@@ -72,3 +75,9 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+## 合约地址
+
+| options | weth | usdc | network |
+| --- | --- | --- | --- |
+| 0x1773D25e51fFAC3d188842824F22c4F8Bb963586 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
