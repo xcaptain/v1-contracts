@@ -16,7 +16,8 @@ contract CallOptionNFT is ERC721 {
     ERC20 public strikeAsset;
 
     struct Metadata {
-        uint256 strikeAssetAmount; // usdt
+        uint256 strikeAssetAmount; // usdc
+        address strikeReceiver; // 行权时接收usdc的一方（支出weth的一方）
         uint256 targetAssetAmount; // weth
         uint maturityDate;
         bool exercised;
@@ -47,7 +48,7 @@ contract CallOptionNFT is ERC721 {
         uint256 targetAssetAmount
     ) public returns (uint256) {
         require(
-            maturityDate > block.timestamp,
+            maturityDate >= block.timestamp + 1 days,
             "ERC721: maturityDate must be in the future"
         );
         require(
@@ -76,6 +77,7 @@ contract CallOptionNFT is ERC721 {
         // 保存行权信息，便于未来读取
         tokenMetadata[newItemId] = Metadata({
             strikeAssetAmount: strikeAssetAmount,
+            strikeReceiver: msg.sender,
             targetAssetAmount: targetAssetAmount,
             maturityDate: maturityDate,
             exercised: false
@@ -109,7 +111,7 @@ contract CallOptionNFT is ERC721 {
         if (
             !strikeAsset.transferFrom(
                 msg.sender,
-                ownerOf(tokenId),
+                tokenMetadata[tokenId].strikeReceiver,
                 tokenMetadata[tokenId].strikeAssetAmount
             )
         ) {
@@ -127,19 +129,18 @@ contract CallOptionNFT is ERC721 {
 
         tokenMetadata[tokenId].exercised = true;
 
-        // TODO: burn erc721 token
         _burn(tokenId);
     }
 
     // 过了行权日，没人行权，卖家赎回锁定的资产
     function redeem(uint256 tokenId) public {
         require(
-            ownerOf(tokenId) == msg.sender,
-            "ERC721: caller is not the owner"
+            tokenMetadata[tokenId].strikeReceiver == msg.sender,
+            "ERC721: caller is not the original owner"
         );
         require(!isExercised(tokenId), "ERC721: token already exercised");
 
-        // 欧式期权只有到期日才能行权
+        // 过期不行权，才能赎回
         require(
             block.timestamp > tokenMetadata[tokenId].maturityDate + 1 days,
             "ERC721: token not expired yet"
@@ -215,13 +216,8 @@ contract CallOptionNFT is ERC721 {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
-        require(
-            tokenId < currentTokenId,
-            string.concat(
-                "ERC721: invalid tokenId, max: ",
-                Strings.toString(tokenId)
-            )
-        );
+        _requireOwned(tokenId); // ensure token not burned
+
         return _createTokenURI(tokenId);
     }
 }
