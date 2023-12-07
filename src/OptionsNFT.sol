@@ -13,12 +13,18 @@ contract OptionsNFT is ERC721 {
     ERC20 public baseAsset;
     ERC20 public quoteAsset;
 
+    enum OptionsKind {
+        Call,
+        Put
+    }
+
     struct Metadata {
         uint256 quoteAssetAmount; // usdc
-        address writer; // 期权承约方（看涨期权卖方，看跌期权的买方）
         uint256 baseAssetAmount; // weth
         uint maturityDate;
         bool exercised;
+        address writer; // 期权承约方（看涨期权卖方，看跌期权的买方）
+        OptionsKind kind;
     }
     mapping(uint256 => Metadata) public tokenMetadata;
 
@@ -63,22 +69,18 @@ contract OptionsNFT is ERC721 {
         _safeMint(recipient, newItemId);
 
         if (
-            !baseAsset.transferFrom(
-                msg.sender,
-                address(this),
-                baseAssetAmount
-            )
+            !baseAsset.transferFrom(msg.sender, address(this), baseAssetAmount)
         ) {
             revert TransferFailed();
         }
 
-        // 保存行权信息，便于未来读取
         tokenMetadata[newItemId] = Metadata({
             quoteAssetAmount: quoteAssetAmount,
-            writer: msg.sender,
             baseAssetAmount: baseAssetAmount,
             maturityDate: maturityDate,
-            exercised: false
+            exercised: false,
+            writer: msg.sender,
+            kind: OptionsKind.Call
         });
         return newItemId;
     }
@@ -105,7 +107,7 @@ contract OptionsNFT is ERC721 {
             "ERC721: token expired"
         );
 
-        // TODO: 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
+        // 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
         if (
             !quoteAsset.transferFrom(
                 msg.sender,
@@ -159,6 +161,11 @@ contract OptionsNFT is ERC721 {
     function _createTokenURI(
         uint256 tokenId
     ) internal view virtual returns (string memory) {
+        string memory optionsKindAttr = tokenMetadata[tokenId].kind ==
+            OptionsKind.Call
+            ? "call"
+            : "put";
+
         string memory attributes = string.concat(
             '[{"trait_type":"maturityDate","value":',
             Strings.toString(tokenMetadata[tokenId].maturityDate),
@@ -166,19 +173,34 @@ contract OptionsNFT is ERC721 {
             Strings.toString(tokenMetadata[tokenId].quoteAssetAmount),
             ',"display_type":"number"},{"trait_type":"baseAssetAmount","value":',
             Strings.toString(tokenMetadata[tokenId].baseAssetAmount),
-            ',"display_type":"number"}]'
+            ',"display_type":"number"},',
+            '{"trait_type":"optionsKind","value":',
+            '"',
+            optionsKindAttr,
+            '"',
+            "}]"
         );
-        string memory tokenPairName = string.concat(baseAsset.symbol(), "/", quoteAsset.symbol());
+        string memory tokenPairName = string.concat(
+            baseAsset.symbol(),
+            "/",
+            quoteAsset.symbol()
+        );
         string memory name = string.concat(
             "#Derswap ",
             tokenPairName,
             " #",
             Strings.toString(tokenId)
         );
+        string memory optionsKindUnicodeSymbol = tokenMetadata[tokenId].kind ==
+            OptionsKind.Call
+            ? unicode"📈"
+            : unicode"📉";
         string memory image = string.concat(
             '<svg width="290" height="500" viewBox="0 0 290 500">',
             '<style>text{font-size:12px;fill:#fff}</style><clipPath id="corners"><rect width="290" height="500" rx="42" ry="42"/></clipPath><g clip-path="url(#corners)"><path d="M0 0h290v500H0z"/></g>',
-            unicode'<text class="h1" x="30" y="70" font-size="14">▲ ',
+            '<text class="h1" x="30" y="70" font-size="14">',
+            optionsKindUnicodeSymbol,
+            " ",
             tokenPairName,
             "</text>",
             unicode'<text x="70" y="240" style="font-size:100px">🌻</text>',

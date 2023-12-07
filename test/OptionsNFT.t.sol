@@ -53,7 +53,7 @@ contract OptionsNFTTest is Test {
         assertEq(nft.isExercised(token_id), false);
 
         // 确保tokenMetadata里的数据正确
-        (uint256 a, address e, uint256 b, uint c, bool d) = nft.tokenMetadata(
+        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
             token_id
         );
         assertEq(a, usdc_amount);
@@ -61,6 +61,7 @@ contract OptionsNFTTest is Test {
         assertEq(c, maturity_date);
         assertEq(d, false);
         assertEq(e, msg_sender);
+        assertEq(uint(f), uint(OptionsNFT.OptionsKind.Call));
 
         // token 0 has the correct tokenURI
         vm.mockCall(
@@ -79,7 +80,7 @@ contract OptionsNFTTest is Test {
         );
         assertEq(
             nft.tokenURI(token_id),
-            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krNHBheUlGZEZWRWd2VlZORVF6d3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJM01DSWdlVDBpTWpRd0lpQnpkSGxzWlQwaVptOXVkQzF6YVhwbE9qRXdNSEI0SWo3d240eTdQQzkwWlhoMFBqeDBaWGgwSUhnOUlqTXdJaUI1UFNJME1EQWlQa2xFT2lBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTWpBaVBsZEZWRWc2SURFd01EQXdNREF3TURBd01EQXdNREF3TURBOEwzUmxlSFErUEhSbGVIUWdlRDBpTXpBaUlIazlJalEwTUNJK1ZWTkVRem9nTVRBd01EQXdNRHd2ZEdWNGRENDhMM04yWno0PSIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifV19"
+            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krOEorVGlDQlhSVlJJTDFWVFJFTThMM1JsZUhRK1BIUmxlSFFnZUQwaU56QWlJSGs5SWpJME1DSWdjM1I1YkdVOUltWnZiblF0YzJsNlpUb3hNREJ3ZUNJKzhKK011end2ZEdWNGRENDhkR1Y0ZENCNFBTSXpNQ0lnZVQwaU5EQXdJajVKUkRvZ01Ed3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJek1DSWdlVDBpTkRJd0lqNVhSVlJJT2lBeE1EQXdNREF3TURBd01EQXdNREF3TURBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTkRBaVBsVlRSRU02SURFd01EQXdNREE4TDNSbGVIUStQQzl6ZG1jKyIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJvcHRpb25zS2luZCIsInZhbHVlIjoiY2FsbCJ9XX0="
         );
 
         // token 1 not exist
@@ -158,7 +159,7 @@ contract OptionsNFTTest is Test {
         nft.exercise(token_id);
 
         // ensure the token is exercised
-        (uint256 a, address e, uint256 b, uint c, bool d) = nft.tokenMetadata(
+        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
             token_id
         );
         assertEq(a, usdc_amount);
@@ -166,6 +167,7 @@ contract OptionsNFTTest is Test {
         assertEq(c, maturity_date);
         assertEq(d, true);
         assertEq(e, msg_sender);
+        assertEq(uint(f), uint(OptionsNFT.OptionsKind.Call));
 
         // after exercised, token is burned
         assertEq(nft.balanceOf(msg_sender), 0);
