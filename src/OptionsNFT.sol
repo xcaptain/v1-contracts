@@ -7,17 +7,16 @@ import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 
 // 看涨期权的合约
-// TODO: 是否需要Upgradable
-contract CallOptionNFT is ERC721 {
+contract OptionsNFT is ERC721 {
     uint256 public currentTokenId; // TODO: uint64 是否够大？
 
-    ERC20 public targetAsset;
-    ERC20 public strikeAsset;
+    ERC20 public baseAsset;
+    ERC20 public quoteAsset;
 
     struct Metadata {
-        uint256 strikeAssetAmount; // usdc
-        address strikeReceiver; // 行权时接收usdc的一方（支出weth的一方）
-        uint256 targetAssetAmount; // weth
+        uint256 quoteAssetAmount; // usdc
+        address writer; // 期权承约方（看涨期权卖方，看跌期权的买方）
+        uint256 baseAssetAmount; // weth
         uint maturityDate;
         bool exercised;
     }
@@ -26,37 +25,37 @@ contract CallOptionNFT is ERC721 {
     // TODO: 是否要细化错误类型？？？锁定的资产转账失败
     error TransferFailed();
 
+    // base/quote
     constructor(
-        address _targetAsset,
-        address _strikeAsset,
+        address _baseAsset, // weth
+        address _quoteAsset, // usdc
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) {
-        targetAsset = ERC20(_targetAsset);
-        strikeAsset = ERC20(_strikeAsset);
+        baseAsset = ERC20(_baseAsset);
+        quoteAsset = ERC20(_quoteAsset);
     }
 
     // 铸造一个看涨期权NFT，属性里包含：
     // maturityDate: 期权到期日
-    // strikeAssetAmount: 行权资产
-    // strikeAddress: 行权资产（ERC20）地址
-    // targetAssetAmount: 标的资产数量，如WETH，vault应该先扣款
-    function mint(
+    // quoteAssetAmount: 行权资产
+    // baseAssetAmount: 标的资产数量，如WETH，vault应该先扣款
+    function calls(
         uint maturityDate,
-        uint256 strikeAssetAmount,
-        uint256 targetAssetAmount
+        uint256 quoteAssetAmount,
+        uint256 baseAssetAmount
     ) public returns (uint256) {
         require(
             maturityDate >= block.timestamp + 1 days,
             "ERC721: maturityDate must be in the future"
         );
         require(
-            strikeAssetAmount > 0,
-            "ERC721: strikeAssetAmount must be greater than zero"
+            quoteAssetAmount > 0,
+            "ERC721: quoteAssetAmount must be greater than zero"
         );
         require(
-            targetAssetAmount > 0,
-            "ERC721: targetAssetAmount must be greater than zero"
+            baseAssetAmount > 0,
+            "ERC721: baseAssetAmount must be greater than zero"
         );
 
         address recipient = msg.sender;
@@ -64,10 +63,10 @@ contract CallOptionNFT is ERC721 {
         _safeMint(recipient, newItemId);
 
         if (
-            !targetAsset.transferFrom(
+            !baseAsset.transferFrom(
                 msg.sender,
                 address(this),
-                targetAssetAmount
+                baseAssetAmount
             )
         ) {
             revert TransferFailed();
@@ -75,9 +74,9 @@ contract CallOptionNFT is ERC721 {
 
         // 保存行权信息，便于未来读取
         tokenMetadata[newItemId] = Metadata({
-            strikeAssetAmount: strikeAssetAmount,
-            strikeReceiver: msg.sender,
-            targetAssetAmount: targetAssetAmount,
+            quoteAssetAmount: quoteAssetAmount,
+            writer: msg.sender,
+            baseAssetAmount: baseAssetAmount,
             maturityDate: maturityDate,
             exercised: false
         });
@@ -108,19 +107,19 @@ contract CallOptionNFT is ERC721 {
 
         // TODO: 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
         if (
-            !strikeAsset.transferFrom(
+            !quoteAsset.transferFrom(
                 msg.sender,
-                tokenMetadata[tokenId].strikeReceiver,
-                tokenMetadata[tokenId].strikeAssetAmount
+                tokenMetadata[tokenId].writer,
+                tokenMetadata[tokenId].quoteAssetAmount
             )
         ) {
             revert TransferFailed();
         }
         if (
-            !targetAsset.transferFrom(
+            !baseAsset.transferFrom(
                 address(this),
                 msg.sender,
-                tokenMetadata[tokenId].targetAssetAmount
+                tokenMetadata[tokenId].baseAssetAmount
             )
         ) {
             revert TransferFailed();
@@ -134,7 +133,7 @@ contract CallOptionNFT is ERC721 {
     // 过了行权日，没人行权，卖家赎回锁定的资产
     function redeem(uint256 tokenId) public {
         require(
-            tokenMetadata[tokenId].strikeReceiver == msg.sender,
+            tokenMetadata[tokenId].writer == msg.sender,
             "ERC721: caller is not the original owner"
         );
         require(!isExercised(tokenId), "ERC721: token already exercised");
@@ -146,10 +145,10 @@ contract CallOptionNFT is ERC721 {
         );
 
         if (
-            !targetAsset.transferFrom(
+            !baseAsset.transferFrom(
                 address(this),
                 msg.sender,
-                tokenMetadata[tokenId].targetAssetAmount
+                tokenMetadata[tokenId].baseAssetAmount
             )
         ) {
             revert TransferFailed();
@@ -163,13 +162,13 @@ contract CallOptionNFT is ERC721 {
         string memory attributes = string.concat(
             '[{"trait_type":"maturityDate","value":',
             Strings.toString(tokenMetadata[tokenId].maturityDate),
-            ',"display_type":"date"},{"trait_type":"strikeAssetAmount","value":',
-            Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
-            ',"display_type":"number"},{"trait_type":"targetAssetAmount","value":',
-            Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
+            ',"display_type":"date"},{"trait_type":"quoteAssetAmount","value":',
+            Strings.toString(tokenMetadata[tokenId].quoteAssetAmount),
+            ',"display_type":"number"},{"trait_type":"baseAssetAmount","value":',
+            Strings.toString(tokenMetadata[tokenId].baseAssetAmount),
             ',"display_type":"number"}]'
         );
-        string memory tokenPairName = string.concat(targetAsset.symbol(), "/", strikeAsset.symbol());
+        string memory tokenPairName = string.concat(baseAsset.symbol(), "/", quoteAsset.symbol());
         string memory name = string.concat(
             "#Derswap ",
             tokenPairName,
@@ -187,14 +186,14 @@ contract CallOptionNFT is ERC721 {
             Strings.toString(tokenId),
             "</text>",
             '<text x="30" y="420">',
-            targetAsset.symbol(),
+            baseAsset.symbol(),
             ": ",
-            Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
+            Strings.toString(tokenMetadata[tokenId].baseAssetAmount),
             "</text>",
             '<text x="30" y="440">',
-            strikeAsset.symbol(),
+            quoteAsset.symbol(),
             ": ",
-            Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
+            Strings.toString(tokenMetadata[tokenId].quoteAssetAmount),
             "</text>",
             "</svg>"
         );

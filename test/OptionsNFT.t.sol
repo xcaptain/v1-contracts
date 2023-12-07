@@ -2,11 +2,11 @@
 pragma solidity ^0.8.20;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {CallOptionNFT} from "../src/OptionNFT.sol";
+import {OptionsNFT} from "../src/OptionsNFT.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
-contract CallOptionNFTTest is Test {
-    CallOptionNFT public nft;
+contract OptionsNFTTest is Test {
+    OptionsNFT public nft;
 
     address public weth_address =
         address(0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9);
@@ -14,7 +14,7 @@ contract CallOptionNFTTest is Test {
         address(0xFCAE2250864A678155f8F4A08fb557127053E59E);
 
     function setUp() public {
-        nft = new CallOptionNFT(
+        nft = new OptionsNFT(
             weth_address, // WETH
             usdc_address, // TESTUSDC
             "WETH-USDC Options",
@@ -22,7 +22,7 @@ contract CallOptionNFTTest is Test {
         );
     }
 
-    function test_Mint() public {
+    function test_calls() public {
         uint256 deposit_weth_amount = 1000000000000000000;
         uint256 usdc_amount = 1000000;
         uint maturity_date = 1701820800; // 2023-12-06T00:00:00Z
@@ -34,7 +34,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().transferFrom.selector,
+                nft.baseAsset().transferFrom.selector,
                 msg_sender,
                 address(nft),
                 deposit_weth_amount
@@ -43,7 +43,7 @@ contract CallOptionNFTTest is Test {
         ); // won't change the real targetAsset balance
 
         vm.prank(msg_sender); // mock msg sender
-        uint256 token_id = nft.mint(
+        uint256 token_id = nft.calls(
             maturity_date,
             usdc_amount,
             deposit_weth_amount
@@ -66,20 +66,20 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().symbol.selector
+                nft.baseAsset().symbol.selector
             ),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
             abi.encodeWithSelector(
-                nft.strikeAsset().symbol.selector
+                nft.quoteAsset().symbol.selector
             ),
             abi.encode("USDC")
         );
         assertEq(
             nft.tokenURI(token_id),
-            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krNHBheUlGZEZWRWd2VlZORVF6d3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJM01DSWdlVDBpTWpRd0lpQnpkSGxzWlQwaVptOXVkQzF6YVhwbE9qRXdNSEI0SWo3d240eTdQQzkwWlhoMFBqeDBaWGgwSUhnOUlqTXdJaUI1UFNJME1EQWlQa2xFT2lBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTWpBaVBsZEZWRWc2SURFd01EQXdNREF3TURBd01EQXdNREF3TURBOEwzUmxlSFErUEhSbGVIUWdlRDBpTXpBaUlIazlJalEwTUNJK1ZWTkVRem9nTVRBd01EQXdNRHd2ZEdWNGRENDhMM04yWno0PSIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJzdHJpa2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJ0YXJnZXRBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifV19"
+            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krNHBheUlGZEZWRWd2VlZORVF6d3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJM01DSWdlVDBpTWpRd0lpQnpkSGxzWlQwaVptOXVkQzF6YVhwbE9qRXdNSEI0SWo3d240eTdQQzkwWlhoMFBqeDBaWGgwSUhnOUlqTXdJaUI1UFNJME1EQWlQa2xFT2lBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTWpBaVBsZEZWRWc2SURFd01EQXdNREF3TURBd01EQXdNREF3TURBOEwzUmxlSFErUEhSbGVIUWdlRDBpTXpBaUlIazlJalEwTUNJK1ZWTkVRem9nTVRBd01EQXdNRHd2ZEdWNGRENDhMM04yWno0PSIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifV19"
         );
 
         // token 1 not exist
@@ -102,7 +102,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().transferFrom.selector,
+                nft.baseAsset().transferFrom.selector,
                 msg_sender,
                 address(nft),
                 deposit_weth_amount
@@ -111,7 +111,7 @@ contract CallOptionNFTTest is Test {
         );
 
         vm.prank(msg_sender); // mock msg sender
-        uint256 token_id = nft.mint(
+        uint256 token_id = nft.calls(
             maturity_date,
             usdc_amount,
             deposit_weth_amount
@@ -132,7 +132,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             usdc_address,
             abi.encodeWithSelector(
-                nft.strikeAsset().transferFrom.selector,
+                nft.quoteAsset().transferFrom.selector,
                 new_owner,
                 msg_sender,
                 usdc_amount
@@ -143,7 +143,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().transferFrom.selector,
+                nft.baseAsset().transferFrom.selector,
                 address(nft),
                 new_owner,
                 deposit_weth_amount
@@ -178,14 +178,14 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().symbol.selector
+                nft.baseAsset().symbol.selector
             ),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
             abi.encodeWithSelector(
-                nft.strikeAsset().symbol.selector
+                nft.quoteAsset().symbol.selector
             ),
             abi.encode("USDC")
         );
@@ -208,7 +208,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().transferFrom.selector,
+                nft.baseAsset().transferFrom.selector,
                 msg_sender,
                 address(nft),
                 deposit_weth_amount
@@ -217,7 +217,7 @@ contract CallOptionNFTTest is Test {
         );
 
         vm.prank(msg_sender); // mock msg sender
-        uint256 token_id = nft.mint(
+        uint256 token_id = nft.calls(
             maturity_date,
             usdc_amount,
             deposit_weth_amount
@@ -241,7 +241,7 @@ contract CallOptionNFTTest is Test {
         vm.mockCall(
             weth_address,
             abi.encodeWithSelector(
-                nft.targetAsset().transferFrom.selector,
+                nft.baseAsset().transferFrom.selector,
                 address(nft),
                 msg_sender,
                 deposit_weth_amount
