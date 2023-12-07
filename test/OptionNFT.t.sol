@@ -63,9 +63,23 @@ contract CallOptionNFTTest is Test {
         assertEq(e, msg_sender);
 
         // token 0 has the correct tokenURI
+        vm.mockCall(
+            weth_address,
+            abi.encodeWithSelector(
+                nft.targetAsset().symbol.selector
+            ),
+            abi.encode("WETH")
+        );
+        vm.mockCall(
+            usdc_address,
+            abi.encodeWithSelector(
+                nft.strikeAsset().symbol.selector
+            ),
+            abi.encode("USDC")
+        );
         assertEq(
             nft.tokenURI(token_id),
-            "data:application/json;base64,eyJuYW1lIjogIiNPcHRpb25ORlQgMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIyYVdWM1FtOTRQU0l3SURBZ05EQXdJRFF3TUNJK1BIUmxlSFFnWTJ4aGMzTTlJbWd4SWlCNFBTSTFNQ0lnZVQwaU56QWlQdUtXc2lBaklEQThMM1JsZUhRK1BIUmxlSFFnZUQwaU56QWlJSGs5SWpJME1DSWdjM1I1YkdVOUltWnZiblF0YzJsNlpUb3hNREJ3ZUNJKzhKK011end2ZEdWNGRENDhkR1Y0ZENCNFBTSTNNQ0lnZVQwaU16QXdJajVDVlZrZ01UQXdNREF3TURBd01EQXdNREF3TURBd01DQlhSVlJJUEM5MFpYaDBQangwWlhoMElIZzlJamN3SWlCNVBTSXpNakFpUGtGVUlERXdNREF3TURBZ1ZWTkVRend2ZEdWNGRENDhMM04yWno0PSIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJzdHJpa2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJ0YXJnZXRBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifV19"
+            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krNHBheUlGZEZWRWd2VlZORVF6d3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJM01DSWdlVDBpTWpRd0lpQnpkSGxzWlQwaVptOXVkQzF6YVhwbE9qRXdNSEI0SWo3d240eTdQQzkwWlhoMFBqeDBaWGgwSUhnOUlqTXdJaUI1UFNJME1EQWlQa2xFT2lBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTWpBaVBsZEZWRWc2SURFd01EQXdNREF3TURBd01EQXdNREF3TURBOEwzUmxlSFErUEhSbGVIUWdlRDBpTXpBaUlIazlJalEwTUNJK1ZWTkVRem9nTVRBd01EQXdNRHd2ZEdWNGRENDhMM04yWno0PSIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJzdHJpa2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJ0YXJnZXRBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifV19"
         );
 
         // token 1 not exist
@@ -161,6 +175,20 @@ contract CallOptionNFTTest is Test {
         vm.expectRevert();
         assertEq(nft.ownerOf(token_id), address(0)); // burned token has no owner
 
+        vm.mockCall(
+            weth_address,
+            abi.encodeWithSelector(
+                nft.targetAsset().symbol.selector
+            ),
+            abi.encode("WETH")
+        );
+        vm.mockCall(
+            usdc_address,
+            abi.encodeWithSelector(
+                nft.strikeAsset().symbol.selector
+            ),
+            abi.encode("USDC")
+        );
         vm.expectRevert();
         nft.tokenURI(0);
     }

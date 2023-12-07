@@ -169,19 +169,34 @@ contract CallOptionNFT is ERC721 {
             Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
             ',"display_type":"number"}]'
         );
+        string memory tokenPairName = string.concat(targetAsset.symbol(), "/", strikeAsset.symbol());
         string memory name = string.concat(
-            "#OptionNFT ",
+            "#Derswap ",
+            tokenPairName,
+            " #",
             Strings.toString(tokenId)
         );
-
         string memory image = string.concat(
-            unicode'<svg viewBox="0 0 400 400"><text class="h1" x="50" y="70">▲ # ',
+            '<svg width="290" height="500" viewBox="0 0 290 500">',
+            '<style>text{font-size:12px;fill:#fff}</style><clipPath id="corners"><rect width="290" height="500" rx="42" ry="42"/></clipPath><g clip-path="url(#corners)"><path d="M0 0h290v500H0z"/></g>',
+            unicode'<text class="h1" x="30" y="70" font-size="14">▲ ',
+            tokenPairName,
+            "</text>",
+            unicode'<text x="70" y="240" style="font-size:100px">🌻</text>',
+            '<text x="30" y="400">ID: ',
             Strings.toString(tokenId),
-            unicode'</text><text x="70" y="240" style="font-size:100px">🌻</text><text x="70" y="300">BUY ',
+            "</text>",
+            '<text x="30" y="420">',
+            targetAsset.symbol(),
+            ": ",
             Strings.toString(tokenMetadata[tokenId].targetAssetAmount),
-            ' WETH</text><text x="70" y="320">AT ',
+            "</text>",
+            '<text x="30" y="440">',
+            strikeAsset.symbol(),
+            ": ",
             Strings.toString(tokenMetadata[tokenId].strikeAssetAmount),
-            " USDC</text></svg>"
+            "</text>",
+            "</svg>"
         );
         string memory image_url = string.concat(
             "data:image/svg+xml;base64,",
