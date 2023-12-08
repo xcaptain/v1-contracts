@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 
 // 看涨期权的合约
-contract OptionsNFT is ERC721 {
+contract OptionsNFT is ERC721Royalty {
     uint256 public currentTokenId; // TODO: uint64 是否够大？
 
     ERC20 public baseAsset;
@@ -35,11 +35,13 @@ contract OptionsNFT is ERC721 {
     constructor(
         address _baseAsset, // weth
         address _quoteAsset, // usdc
+        address _royaltyAddress, // default royalty receiver
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) {
         baseAsset = ERC20(_baseAsset);
         quoteAsset = ERC20(_quoteAsset);
+        _setDefaultRoyalty(_royaltyAddress, 50); // set default royalty to 0.5%
     }
 
     // 铸造一个看涨期权NFT，属性里包含：

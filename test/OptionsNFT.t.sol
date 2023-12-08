@@ -12,11 +12,14 @@ contract OptionsNFTTest is Test {
         address(0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9);
     address public usdc_address =
         address(0xFCAE2250864A678155f8F4A08fb557127053E59E);
+    address public royalty_address =
+        address(0x720aC46FdB6da28FA751bc60AfB8094290c2B4b7);
 
     function setUp() public {
         nft = new OptionsNFT(
             weth_address, // WETH
             usdc_address, // TESTUSDC
+            royalty_address,
             "WETH-USDC Options",
             "WETHUSDC"
         );
@@ -82,6 +85,11 @@ contract OptionsNFTTest is Test {
             nft.tokenURI(token_id),
             "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krOEorVGlDQlhSVlJJTDFWVFJFTThMM1JsZUhRK1BIUmxlSFFnZUQwaU56QWlJSGs5SWpJME1DSWdjM1I1YkdVOUltWnZiblF0YzJsNlpUb3hNREJ3ZUNJKzhKK011end2ZEdWNGRENDhkR1Y0ZENCNFBTSXpNQ0lnZVQwaU5EQXdJajVKUkRvZ01Ed3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJek1DSWdlVDBpTkRJd0lqNVhSVlJJT2lBeE1EQXdNREF3TURBd01EQXdNREF3TURBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTkRBaVBsVlRSRU02SURFd01EQXdNREE4TDNSbGVIUStQQzl6ZG1jKyIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJvcHRpb25zS2luZCIsInZhbHVlIjoiY2FsbCJ9XX0="
         );
+
+        // make sure token 0 has correct royalty info
+        (address royaltyAddress, uint256 royaltyFee) = nft.royaltyInfo(token_id, 1000000000000000000);
+        assertEq(royaltyAddress, royalty_address);
+        assertEq(royaltyFee, 5000000000000000);
 
         // token 1 not exist
         vm.expectRevert();
