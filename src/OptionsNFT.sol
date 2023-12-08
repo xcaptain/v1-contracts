@@ -8,7 +8,7 @@ import "openzeppelin-contracts/contracts/utils/Base64.sol";
 
 // 看涨期权的合约
 contract OptionsNFT is ERC721Royalty {
-    uint256 public currentTokenId; // TODO: uint64 是否够大？
+    uint64 public currentTokenId;
 
     ERC20 public baseAsset;
     ERC20 public quoteAsset;
@@ -67,7 +67,7 @@ contract OptionsNFT is ERC721Royalty {
         );
 
         address recipient = msg.sender;
-        uint256 newItemId = currentTokenId++;
+        uint64 newItemId = currentTokenId++;
         _safeMint(recipient, newItemId);
 
         if (
