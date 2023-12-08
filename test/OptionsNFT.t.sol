@@ -51,6 +51,13 @@ contract OptionsNFTTest is Test {
         assertEq(result, true);
     }
 
+    function test_contract_Uri() public {
+        assertEq(
+            nft.contractURI(),
+            "data:application/json;utf8,{\"name\": \"Derswap OptionsNFT\",\"description\":\"We are the first decentralized options trading protocol.\",\"image\": \"https://derswap.com/logo.png\",\"external_link\": \"https://derswap.com/\"}"
+        );
+    }
+
     function test_calls() public {
         uint256 deposit_weth_amount = 1000000000000000000;
         uint256 usdc_amount = 1000000;
@@ -82,9 +89,14 @@ contract OptionsNFTTest is Test {
         assertEq(nft.isExercised(token_id), false);
 
         // 确保tokenMetadata里的数据正确
-        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
-            token_id
-        );
+        (
+            uint256 a,
+            uint256 b,
+            uint c,
+            bool d,
+            address e,
+            OptionsNFT.OptionsKind f
+        ) = nft.tokenMetadata(token_id);
         assertEq(a, usdc_amount);
         assertEq(b, deposit_weth_amount);
         assertEq(c, maturity_date);
@@ -95,16 +107,12 @@ contract OptionsNFTTest is Test {
         // token 0 has the correct tokenURI
         vm.mockCall(
             weth_address,
-            abi.encodeWithSelector(
-                nft.baseAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.baseAsset().symbol.selector),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
-            abi.encodeWithSelector(
-                nft.quoteAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.quoteAsset().symbol.selector),
             abi.encode("USDC")
         );
         assertEq(
@@ -113,7 +121,10 @@ contract OptionsNFTTest is Test {
         );
 
         // make sure token 0 has correct royalty info
-        (address royaltyAddress, uint256 royaltyFee) = nft.royaltyInfo(token_id, 1000000000000000000);
+        (address royaltyAddress, uint256 royaltyFee) = nft.royaltyInfo(
+            token_id,
+            1000000000000000000
+        );
         assertEq(royaltyAddress, royalty_address);
         assertEq(royaltyFee, 5000000000000000);
 
@@ -193,9 +204,14 @@ contract OptionsNFTTest is Test {
         nft.exercise(token_id);
 
         // ensure the token is exercised
-        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
-            token_id
-        );
+        (
+            uint256 a,
+            uint256 b,
+            uint c,
+            bool d,
+            address e,
+            OptionsNFT.OptionsKind f
+        ) = nft.tokenMetadata(token_id);
         assertEq(a, usdc_amount);
         assertEq(b, deposit_weth_amount);
         assertEq(c, maturity_date);
@@ -213,16 +229,12 @@ contract OptionsNFTTest is Test {
 
         vm.mockCall(
             weth_address,
-            abi.encodeWithSelector(
-                nft.baseAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.baseAsset().symbol.selector),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
-            abi.encodeWithSelector(
-                nft.quoteAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.quoteAsset().symbol.selector),
             abi.encode("USDC")
         );
         vm.expectRevert();
@@ -314,19 +326,20 @@ contract OptionsNFTTest is Test {
         ); // won't change the real targetAsset balance
 
         vm.prank(msg_sender); // mock msg sender
-        uint256 token_id = nft.puts(
-            weth_amount,
-            usdc_amount,
-            maturity_date
-        );
+        uint256 token_id = nft.puts(weth_amount, usdc_amount, maturity_date);
         assertEq(token_id, 0);
         assertEq(nft.balanceOf(msg_sender), 1);
         assertEq(nft.isExercised(token_id), false);
 
         // 确保tokenMetadata里的数据正确
-        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
-            token_id
-        );
+        (
+            uint256 a,
+            uint256 b,
+            uint c,
+            bool d,
+            address e,
+            OptionsNFT.OptionsKind f
+        ) = nft.tokenMetadata(token_id);
         assertEq(a, usdc_amount);
         assertEq(b, weth_amount);
         assertEq(c, maturity_date);
@@ -337,16 +350,12 @@ contract OptionsNFTTest is Test {
         // token 0 has the correct tokenURI
         vm.mockCall(
             weth_address,
-            abi.encodeWithSelector(
-                nft.baseAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.baseAsset().symbol.selector),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
-            abi.encodeWithSelector(
-                nft.quoteAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.quoteAsset().symbol.selector),
             abi.encode("USDC")
         );
         assertEq(
@@ -355,7 +364,10 @@ contract OptionsNFTTest is Test {
         );
 
         // make sure token 0 has correct royalty info
-        (address royaltyAddress, uint256 royaltyFee) = nft.royaltyInfo(token_id, 1000000000000000000);
+        (address royaltyAddress, uint256 royaltyFee) = nft.royaltyInfo(
+            token_id,
+            1000000000000000000
+        );
         assertEq(royaltyAddress, royalty_address);
         assertEq(royaltyFee, 5000000000000000);
 
@@ -435,9 +447,14 @@ contract OptionsNFTTest is Test {
         nft.exercise(token_id);
 
         // ensure the token is exercised
-        (uint256 a, uint256 b, uint c, bool d, address e, OptionsNFT.OptionsKind f) = nft.tokenMetadata(
-            token_id
-        );
+        (
+            uint256 a,
+            uint256 b,
+            uint c,
+            bool d,
+            address e,
+            OptionsNFT.OptionsKind f
+        ) = nft.tokenMetadata(token_id);
         assertEq(a, usdc_amount);
         assertEq(b, deposit_weth_amount);
         assertEq(c, maturity_date);
@@ -455,16 +472,12 @@ contract OptionsNFTTest is Test {
 
         vm.mockCall(
             weth_address,
-            abi.encodeWithSelector(
-                nft.baseAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.baseAsset().symbol.selector),
             abi.encode("WETH")
         );
         vm.mockCall(
             usdc_address,
-            abi.encodeWithSelector(
-                nft.quoteAsset().symbol.selector
-            ),
+            abi.encodeWithSelector(nft.quoteAsset().symbol.selector),
             abi.encode("USDC")
         );
         vm.expectRevert();
