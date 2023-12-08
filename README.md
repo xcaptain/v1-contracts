@@ -81,3 +81,8 @@ $ cast --help
 | options | weth | usdc | network |
 | --- | --- | --- | --- |
 | 0x1773D25e51fFAC3d188842824F22c4F8Bb963586 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
+
+## TODO
+- [ ] Set collaborators. [https://docs.opensea.io/docs/contract-level-metadata](https://docs.opensea.io/docs/contract-level-metadata)
+- [ ] Update external_link, logo in contractURI
+- [ ] support puts options.

@@ -257,4 +257,10 @@ contract OptionsNFT is ERC721Royalty {
 
         return _createTokenURI(tokenId);
     }
+
+    function contractURI() public pure returns (string memory) {
+        string
+            memory json = '{"name": "Derswap OptionsNFT","description":"We are the first decentralized options trading protocol.","image": "https://derswap.com/logo.png","external_link": "https://derswap.com/"}';
+        return string.concat("data:application/json;utf8,", json);
+    }
 }
