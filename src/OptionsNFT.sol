@@ -49,26 +49,25 @@ contract OptionsNFT is ERC721Royalty {
     // quoteAssetAmount: 行权资产
     // baseAssetAmount: 标的资产数量，如WETH，vault应该先扣款
     function calls(
-        uint maturityDate,
+        uint256 baseAssetAmount,
         uint256 quoteAssetAmount,
-        uint256 baseAssetAmount
+        uint maturityDate
     ) public returns (uint256) {
         require(
-            maturityDate >= block.timestamp + 1 days,
-            "ERC721: maturityDate must be in the future"
+            baseAssetAmount > 0,
+            "ERC721: baseAssetAmount must be greater than zero"
         );
         require(
             quoteAssetAmount > 0,
             "ERC721: quoteAssetAmount must be greater than zero"
         );
         require(
-            baseAssetAmount > 0,
-            "ERC721: baseAssetAmount must be greater than zero"
+            maturityDate >= block.timestamp + 1 days,
+            "ERC721: maturityDate must be in the future"
         );
 
-        address recipient = msg.sender;
         uint64 newItemId = currentTokenId++;
-        _safeMint(recipient, newItemId);
+        _safeMint(msg.sender, newItemId);
 
         if (
             !baseAsset.transferFrom(msg.sender, address(this), baseAssetAmount)
@@ -83,6 +82,49 @@ contract OptionsNFT is ERC721Royalty {
             exercised: false,
             writer: msg.sender,
             kind: OptionsKind.Call
+        });
+        return newItemId;
+    }
+
+    // 铸造看跌期权NFT
+    function puts(
+        uint256 baseAssetAmount,
+        uint256 quoteAssetAmount,
+        uint maturityDate
+    ) public returns (uint256) {
+        require(
+            baseAssetAmount > 0,
+            "ERC721: baseAssetAmount must be greater than zero"
+        );
+        require(
+            quoteAssetAmount > 0,
+            "ERC721: quoteAssetAmount must be greater than zero"
+        );
+        require(
+            maturityDate >= block.timestamp + 1 days,
+            "ERC721: maturityDate must be in the future"
+        );
+
+        uint64 newItemId = currentTokenId++;
+        _safeMint(msg.sender, newItemId);
+
+        if (
+            !quoteAsset.transferFrom(
+                msg.sender,
+                address(this),
+                quoteAssetAmount
+            )
+        ) {
+            revert TransferFailed();
+        }
+
+        tokenMetadata[newItemId] = Metadata({
+            quoteAssetAmount: quoteAssetAmount,
+            baseAssetAmount: baseAssetAmount,
+            maturityDate: maturityDate,
+            exercised: false,
+            writer: msg.sender,
+            kind: OptionsKind.Put
         });
         return newItemId;
     }
@@ -110,23 +152,44 @@ contract OptionsNFT is ERC721Royalty {
         );
 
         // 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
-        if (
-            !quoteAsset.transferFrom(
-                msg.sender,
-                tokenMetadata[tokenId].writer,
-                tokenMetadata[tokenId].quoteAssetAmount
-            )
-        ) {
-            revert TransferFailed();
-        }
-        if (
-            !baseAsset.transferFrom(
-                address(this),
-                msg.sender,
-                tokenMetadata[tokenId].baseAssetAmount
-            )
-        ) {
-            revert TransferFailed();
+        if (tokenMetadata[tokenId].kind == OptionsKind.Call) {
+            if (
+                !quoteAsset.transferFrom(
+                    msg.sender,
+                    tokenMetadata[tokenId].writer,
+                    tokenMetadata[tokenId].quoteAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
+            if (
+                !baseAsset.transferFrom(
+                    address(this),
+                    msg.sender,
+                    tokenMetadata[tokenId].baseAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
+        } else {
+            if (
+                !baseAsset.transferFrom(
+                    msg.sender,
+                    tokenMetadata[tokenId].writer,
+                    tokenMetadata[tokenId].baseAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
+            if (
+                !quoteAsset.transferFrom(
+                    address(this),
+                    msg.sender,
+                    tokenMetadata[tokenId].quoteAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
         }
 
         tokenMetadata[tokenId].exercised = true;
@@ -148,15 +211,29 @@ contract OptionsNFT is ERC721Royalty {
             "ERC721: token not expired yet"
         );
 
-        if (
-            !baseAsset.transferFrom(
-                address(this),
-                msg.sender,
-                tokenMetadata[tokenId].baseAssetAmount
-            )
-        ) {
-            revert TransferFailed();
+        // 如果是看涨期权，赎回的时候，把标的资产转移回来
+        if (tokenMetadata[tokenId].kind == OptionsKind.Call) {
+            if (
+                !baseAsset.transferFrom(
+                    address(this),
+                    msg.sender,
+                    tokenMetadata[tokenId].baseAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
+        } else {
+            if (
+                !quoteAsset.transferFrom(
+                    address(this),
+                    msg.sender,
+                    tokenMetadata[tokenId].quoteAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
         }
+
         _burn(tokenId);
     }
 
