@@ -275,7 +275,7 @@ contract OptionsNFT is ERC721Royalty {
             ? unicode"📈"
             : unicode"📉";
         string memory image = string.concat(
-            '<svg width="290" height="500" viewBox="0 0 290 500">',
+            '<svg width="290" height="500" viewBox="0 0 290 500" xmlns="http://www.w3.org/2000/svg">',
             '<style>text{font-size:12px;fill:#fff}</style><clipPath id="corners"><rect width="290" height="500" rx="42" ry="42"/></clipPath><g clip-path="url(#corners)"><path d="M0 0h290v500H0z"/></g>',
             '<text class="h1" x="30" y="70" font-size="14">',
             optionsKindUnicodeSymbol,

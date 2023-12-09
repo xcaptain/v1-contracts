@@ -86,4 +86,5 @@ $ cast --help
 - [ ] Set collaborators. [https://docs.opensea.io/docs/contract-level-metadata](https://docs.opensea.io/docs/contract-level-metadata)
 - [ ] Update external_link, logo in contractURI
 - [x] support puts options.
-- [ ] opensea svg content type wrong
+- [ ] opensea svg content type wrong(must add xmln=xxx)
+- [ ] approve just once.(EIP2612 or approve max)
