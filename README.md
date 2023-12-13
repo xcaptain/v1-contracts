@@ -55,6 +55,15 @@ forge script script/TestUSDC.s.sol:TestUSDCScript --rpc-url $SEPOLIA_RPC_URL --b
 
 # 部署看涨期权合约
 forge script script/OptionsNFT.s.sol:OptionsNFTScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署 DeSwapToken 合约
+forge script script/DeSwapToken.s.sol:DeSwapTokenScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署 DeSwapTimelockController 合约
+forge script script/DeSwapTimelockController.s.sol:DeSwapTimelockControllerScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署 DeSwapGovernor 合约
+forge script script/DeSwapGovernor.s.sol:DeSwapGovernorScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 ```
 
 ### Manually Verify
@@ -78,9 +87,10 @@ $ cast --help
 
 ## 合约地址
 
-| options | weth | usdc | network |
-| --- | --- | --- | --- |
-| 0x72cc35eF6E55B94bBcb216B8D1b31C8E37994ea6 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
+| options | DeSwapToken | DeSwapTimelockController | DeSwapGovernor | weth | usdc | network |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0x72cc35eF6E55B94bBcb216B8D1b31C8E37994ea6 | 0xACA8cC8BC17D7A3e6cB62065F2C79dC66FbBC86C |  0x7557fc1e59e52D28546A9042579a4E2873c8a9F4 | 0x5A3036AAfd7213bF330d08273cee0C8734b7312E | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
+
 
 ## TODO
 - [ ] Set collaborators. [https://docs.opensea.io/docs/contract-level-metadata](https://docs.opensea.io/docs/contract-level-metadata)
@@ -88,3 +98,7 @@ $ cast --help
 - [x] support puts options.
 - [ ] opensea svg content type wrong(must add xmln=xxx)
 - [ ] approve just once.(EIP2612 or approve max)
+- [ ] not check transferFrom return value
+- [ ] reuse calls/puts
+- [ ] create3 ensure same address
+- [ ] learn to create and manage a DAO
