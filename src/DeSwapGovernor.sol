@@ -11,7 +11,7 @@ import "openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockC
 contract DeSwapGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
     constructor(IVotes _token, TimelockController _timelock)
         Governor("DeSwapGovernor")
-        GovernorSettings(300 /* 1 hour */, 600 /* 2 hour */, 0)
+        GovernorSettings(2 /* 24 seconds */, 30 /* 5 minutes */, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
         GovernorTimelockControl(_timelock)

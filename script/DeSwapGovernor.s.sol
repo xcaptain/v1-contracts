@@ -16,7 +16,7 @@ contract DeSwapGovernorScript is Script {
         new DeSwapGovernor(
             DeSwapToken(address(0xACA8cC8BC17D7A3e6cB62065F2C79dC66FbBC86C)),
             DeSwapTimelockController(payable(
-                address(0x7557fc1e59e52D28546A9042579a4E2873c8a9F4)
+                address(0x25D30E1Bb90F197FED0eF5D8f097b3F020ff61c1)
             ))
         );
 

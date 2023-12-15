@@ -8,7 +8,7 @@ contract DeSwapTimelockController is TimelockController {
         address initialOwner
     )
         TimelockController(
-            3600,
+            60,
             new address[](0),
             new address[](0),
             initialOwner
