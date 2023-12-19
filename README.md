@@ -62,13 +62,13 @@ forge script script/DeSwapToken.s.sol:DeSwapTokenScript --rpc-url $SEPOLIA_RPC_U
 # 部署 DeSwapTimelockController 合约
 forge script script/DeSwapTimelockController.s.sol:DeSwapTimelockControllerScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 
-# 部署 DeSwapGovernor 合约
+# 部署 DeSwapGovernor 合约，依赖 DST 和 timelock 合约地址
 forge script script/DeSwapGovernor.s.sol:DeSwapGovernorScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 ```
 
 ### Manually Verify
 ```shell
-forge verify-contract --watch --chain-id 11155111 --constructor-args $(cast abi-encode "constructor(address,address,string,string)" 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 0xFCAE2250864A678155f8F4A08fb557127053E59E 0x720aC46FdB6da28FA751bc60AfB8094290c2B4b7 "WETH/USDC Options" "WETH/USDC") 0x1773d25e51ffac3d188842824f22c4f8bb963586 src/OptionsNFT.sol:OptionsNFT
+forge verify-contract --watch --chain-id 11155111 --constructor-args $(cast abi-encode "constructor(address,address,address,string,string)" 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 0xFCAE2250864A678155f8F4A08fb557127053E59E 0x25D30E1Bb90F197FED0eF5D8f097b3F020ff61c1 "WETH/USDC Options" "WETH/USDC") 0x49EB40ED22fad16aD0d50207434ff9e7DAf9f54b src/OptionsNFT.sol:OptionsNFT
 ```
 
 ### Cast
@@ -89,17 +89,16 @@ $ cast --help
 
 | options | DeSwapToken | DeSwapTimelockController | DeSwapGovernor | weth | usdc | network |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0x72cc35eF6E55B94bBcb216B8D1b31C8E37994ea6 | 0xACA8cC8BC17D7A3e6cB62065F2C79dC66FbBC86C |  0x7557fc1e59e52D28546A9042579a4E2873c8a9F4 | 0x5A3036AAfd7213bF330d08273cee0C8734b7312E | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
-| 0x72cc35eF6E55B94bBcb216B8D1b31C8E37994ea6 | 0xACA8cC8BC17D7A3e6cB62065F2C79dC66FbBC86C |  0x25D30E1Bb90F197FED0eF5D8f097b3F020ff61c1 | 0xBC798828A55F102CB8Ac6BDE9b1Fdda6A7eb0A91 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
+| 0xEB0bDd73ADB291B245CDB48c650Cf684607D2033 | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
 
 
 ## TODO
 - [ ] Set collaborators. [https://docs.opensea.io/docs/contract-level-metadata](https://docs.opensea.io/docs/contract-level-metadata)
 - [ ] Update external_link, logo in contractURI
 - [x] support puts options.
-- [ ] opensea svg content type wrong(must add xmln=xxx)
+- [x] opensea svg content type wrong(must add xmln=xxx)
 - [ ] approve just once.(EIP2612 or approve max)
 - [ ] not check transferFrom return value
 - [ ] reuse calls/puts
-- [ ] create3 ensure same address
+- [x] create3 ensure same address
 - [ ] learn to create and manage a DAO
