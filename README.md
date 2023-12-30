@@ -50,25 +50,31 @@ $ anvil
 ```shell
 source .env
 
-# 部署测试的usdc合约
-forge script script/TestUSDC.s.sol:TestUSDCScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
-
-# 部署看涨期权合约
-forge script script/OptionsNFT.s.sol:OptionsNFTScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
-
 # 部署 DeSwapToken 合约
-forge script script/DeSwapToken.s.sol:DeSwapTokenScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+forge script script/DeSwapToken.s.sol:DeSwapTokenScript --rpc-url $SEPOLIA_RPC_URL --broadcast -vvvv
 
 # 部署 DeSwapTimelockController 合约
 forge script script/DeSwapTimelockController.s.sol:DeSwapTimelockControllerScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 
 # 部署 DeSwapGovernor 合约，依赖 DST 和 timelock 合约地址
 forge script script/DeSwapGovernor.s.sol:DeSwapGovernorScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署测试的usdc合约
+forge script script/TestUSDC.s.sol:TestUSDCScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# 部署看涨期权合约
+forge script script/OptionsNFT.s.sol:OptionsNFTScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 ```
 
 ### Manually Verify
 ```shell
 forge verify-contract --watch --chain-id 11155111 --constructor-args $(cast abi-encode "constructor(address,address,address,string,string)" 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 0xFCAE2250864A678155f8F4A08fb557127053E59E 0x25D30E1Bb90F197FED0eF5D8f097b3F020ff61c1 "WETH/USDC Options" "WETH/USDC") 0x49EB40ED22fad16aD0d50207434ff9e7DAf9f54b src/OptionsNFT.sol:OptionsNFT
+```
+
+verify on mumbai testnet:
+
+```shell
+forge verify-contract --watch --chain-id 80001 --constructor-args $(cast abi-encode "constructor(address)" 0x7e727520B29773e7F23a8665649197aAf064CeF1) 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd --verifier-url $MUMBAI_VERIFIER_URL --etherscan-api-key $MUMBAI_API_KEY src/DeSwapToken.sol:DeSwapToken
 ```
 
 ### Cast
@@ -87,9 +93,12 @@ $ cast --help
 
 ## 合约地址
 
+
+
 | options | DeSwapToken | DeSwapTimelockController | DeSwapGovernor | weth | usdc | network |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0xEB0bDd73ADB291B245CDB48c650Cf684607D2033 | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
+| 0xEB0bDd73ADB291B245CDB48c650Cf684607D2033 | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0x6CcB30b54Bf2B1Cf47E093B92aECCE404F9824Cd | sepolia |
+| 0xEB0bDd73ADB291B245CDB48c650Cf684607D2033 | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0x6CcB30b54Bf2B1Cf47E093B92aECCE404F9824Cd | polygon |
 
 
 ## TODO

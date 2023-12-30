@@ -156,12 +156,25 @@ contract OptionsNFT is ERC721Royalty {
             if (
                 !quoteAsset.transferFrom(
                     msg.sender,
-                    tokenMetadata[tokenId].writer,
+                    address(this),
                     tokenMetadata[tokenId].quoteAssetAmount
                 )
+
             ) {
                 revert TransferFailed();
             }
+
+            if (
+                !quoteAsset.transferFrom(
+                    address(this),
+                    tokenMetadata[tokenId].writer,
+                    tokenMetadata[tokenId].quoteAssetAmount
+                )
+
+            ) {
+                revert TransferFailed();
+            }
+
             if (
                 !baseAsset.transferFrom(
                     address(this),
@@ -175,12 +188,23 @@ contract OptionsNFT is ERC721Royalty {
             if (
                 !baseAsset.transferFrom(
                     msg.sender,
+                    address(this),
+                    tokenMetadata[tokenId].baseAssetAmount
+                )
+            ) {
+                revert TransferFailed();
+            }
+
+            if (
+                !baseAsset.transferFrom(
+                    address(this),
                     tokenMetadata[tokenId].writer,
                     tokenMetadata[tokenId].baseAssetAmount
                 )
             ) {
                 revert TransferFailed();
             }
+
             if (
                 !quoteAsset.transferFrom(
                     address(this),
@@ -197,12 +221,8 @@ contract OptionsNFT is ERC721Royalty {
         _burn(tokenId);
     }
 
-    // 过了行权日，没人行权，卖家赎回锁定的资产
-    function redeem(uint256 tokenId) public {
-        require(
-            tokenMetadata[tokenId].writer == msg.sender,
-            "ERC721: caller is not the original owner"
-        );
+    // 为行权的资产，过了交割日期，任何人都可以作废
+    function burn(uint256 tokenId) public {
         require(!isExercised(tokenId), "ERC721: token already exercised");
 
         // 过期不行权，才能赎回

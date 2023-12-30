@@ -280,7 +280,7 @@ contract OptionsNFTTest is Test {
         assertEq(nft.ownerOf(token_id), msg_sender);
         vm.prank(msg_sender); // mock msg sender
         vm.expectRevert(); // should revert because not matured
-        nft.redeem(token_id);
+        nft.burn(token_id);
 
         // change block time, reach maturity date
         redeem_block_timestamp = 1701907210; // 2023-12-07T00:00:10Z
@@ -299,7 +299,7 @@ contract OptionsNFTTest is Test {
 
         vm.warp(redeem_block_timestamp);
         vm.prank(msg_sender);
-        nft.redeem(token_id);
+        nft.burn(token_id);
 
         vm.expectRevert();
         nft.ownerOf(token_id); // token burned after redeemed
@@ -523,7 +523,7 @@ contract OptionsNFTTest is Test {
         assertEq(nft.ownerOf(token_id), msg_sender);
         vm.prank(msg_sender); // mock msg sender
         vm.expectRevert(); // should revert because not matured
-        nft.redeem(token_id);
+        nft.burn(token_id);
 
         // change block time, reach maturity date
         redeem_block_timestamp = 1701907210; // 2023-12-07T00:00:10Z
@@ -542,7 +542,7 @@ contract OptionsNFTTest is Test {
 
         vm.warp(redeem_block_timestamp);
         vm.prank(msg_sender);
-        nft.redeem(token_id);
+        nft.burn(token_id);
 
         vm.expectRevert();
         nft.ownerOf(token_id); // token burned after redeemed
