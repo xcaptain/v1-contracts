@@ -97,7 +97,7 @@ $ cast --help
 
 | options | DeSwapToken | DeSwapTimelockController | DeSwapGovernor | weth | usdc | network |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0x142fa3a0D502C2Eb0DBa7b74F756fd6745a44d0d | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0x6CcB30b54Bf2B1Cf47E093B92aECCE404F9824Cd | sepolia |
+| 0xe10C396C0635BEE8986de9A870852F528A0E0107 | 0x68C36e8d2fB887e7f06a700Ef89fB7671b49E1bd |  0xD686D2c83B86Ed6A9d5A1e817fA5f4c1269deedC | 0x6D4e5958F2386D8bCFa4e716d5A13fbEB509D188 | 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9 | 0xFCAE2250864A678155f8F4A08fb557127053E59E | sepolia |
 
 
 ## TODO
@@ -110,3 +110,7 @@ $ cast --help
 - [ ] reuse calls/puts
 - [x] create3 ensure same address
 - [ ] learn to create and manage a DAO
+
+
+## Note
+如果create3报错，那可能是因为 .env 里面的 version 没更新

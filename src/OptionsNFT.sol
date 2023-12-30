@@ -152,8 +152,10 @@ contract OptionsNFT is ERC721Royalty {
         //     "ERC721: token expired"
         // );
 
+
         // 行权资产先转移，确保卖家收到usdt之类的，然后卖家再把标的资产转移过去
         if (tokenMetadata[tokenId].kind == OptionsKind.Call) {
+            // 确保用户approve给了合约地址
             if (
                 !quoteAsset.transferFrom(
                     msg.sender,
@@ -165,20 +167,15 @@ contract OptionsNFT is ERC721Royalty {
                 revert TransferFailed();
             }
 
-            if (
-                !quoteAsset.transferFrom(
-                    address(this),
-                    tokenMetadata[tokenId].writer,
-                    tokenMetadata[tokenId].quoteAssetAmount
-                )
-
-            ) {
+            if (!quoteAsset.transfer(
+                tokenMetadata[tokenId].writer,
+                tokenMetadata[tokenId].quoteAssetAmount
+            )) {
                 revert TransferFailed();
-            }
+            }          
 
             if (
-                !baseAsset.transferFrom(
-                    address(this),
+                !baseAsset.transfer(
                     msg.sender,
                     tokenMetadata[tokenId].baseAssetAmount
                 )
@@ -186,6 +183,7 @@ contract OptionsNFT is ERC721Royalty {
                 revert TransferFailed();
             }
         } else {
+            // 确保用户 approve 了
             if (
                 !baseAsset.transferFrom(
                     msg.sender,
@@ -197,8 +195,7 @@ contract OptionsNFT is ERC721Royalty {
             }
 
             if (
-                !baseAsset.transferFrom(
-                    address(this),
+                !baseAsset.transfer(
                     tokenMetadata[tokenId].writer,
                     tokenMetadata[tokenId].baseAssetAmount
                 )
@@ -207,8 +204,7 @@ contract OptionsNFT is ERC721Royalty {
             }
 
             if (
-                !quoteAsset.transferFrom(
-                    address(this),
+                !quoteAsset.transfer(
                     msg.sender,
                     tokenMetadata[tokenId].quoteAssetAmount
                 )
