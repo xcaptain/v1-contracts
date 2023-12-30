@@ -54,7 +54,7 @@ contract OptionsNFTTest is Test {
     function test_contract_Uri() public {
         assertEq(
             nft.contractURI(),
-            "data:application/json;utf8,{\"name\": \"Derswap OptionsNFT\",\"description\":\"We are the first decentralized options trading protocol.\",\"image\": \"https://derswap.com/logo.png\",\"external_link\": \"https://derswap.com/\"}"
+            "data:application/json;utf8,{\"name\": \"Deswap OptionsNFT\",\"description\":\"We are the first decentralized options as NFT trading platform.\",\"image\": \"https://deswap.org/logo.png\",\"external_link\": \"https://deswap.org\"}"
         );
     }
 
@@ -117,7 +117,7 @@ contract OptionsNFTTest is Test {
         );
         assertEq(
             nft.tokenURI(token_id),
-            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krOEorVGlDQlhSVlJJTDFWVFJFTThMM1JsZUhRK1BIUmxlSFFnZUQwaU56QWlJSGs5SWpJME1DSWdjM1I1YkdVOUltWnZiblF0YzJsNlpUb3hNREJ3ZUNJKzhKK011end2ZEdWNGRENDhkR1Y0ZENCNFBTSXpNQ0lnZVQwaU5EQXdJajVKUkRvZ01Ed3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJek1DSWdlVDBpTkRJd0lqNVhSVlJJT2lBeE1EQXdNREF3TURBd01EQXdNREF3TURBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTkRBaVBsVlRSRU02SURFd01EQXdNREE4TDNSbGVIUStQQzl6ZG1jKyIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA4MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJvcHRpb25zS2luZCIsInZhbHVlIjoiY2FsbCJ9XX0="
+            "data:application/json;base64,eyJuYW1lIjogIiNEZXN3YXAgV0VUSC9VU0RDICMwIiwgImltYWdlIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1qa3dJaUJvWldsbmFIUTlJalV3TUNJZ2RtbGxkMEp2ZUQwaU1DQXdJREk1TUNBMU1EQWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSE4wZVd4bFBuUmxlSFI3Wm05dWRDMXphWHBsT2pFeWNIZzdabWxzYkRvalptWm1mVHd2YzNSNWJHVStQR05zYVhCUVlYUm9JR2xrUFNKamIzSnVaWEp6SWo0OGNtVmpkQ0IzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdjbmc5SWpReUlpQnllVDBpTkRJaUx6NDhMMk5zYVhCUVlYUm9QanhuSUdOc2FYQXRjR0YwYUQwaWRYSnNLQ05qYjNKdVpYSnpLU0krUEhCaGRHZ2daRDBpVFRBZ01HZ3lPVEIyTlRBd1NEQjZJaTgrUEM5blBqeDBaWGgwSUdOc1lYTnpQU0pvTVNJZ2VEMGlNekFpSUhrOUlqY3dJaUJtYjI1MExYTnBlbVU5SWpFMElqN3duNU9JSUZkRlZFZ3ZWVk5FUXp3dmRHVjRkRDQ4ZEdWNGRDQjRQU0kzTUNJZ2VUMGlNalF3SWlCemRIbHNaVDBpWm05dWRDMXphWHBsT2pFd01IQjRJajd3bjR5N1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTURBaVBrbEVPaUF3UEM5MFpYaDBQangwWlhoMElIZzlJak13SWlCNVBTSTBNakFpUGxkRlZFZzZJREV3TURBd01EQXdNREF3TURBd01EQXdNREE4TDNSbGVIUStQSFJsZUhRZ2VEMGlNekFpSUhrOUlqUTBNQ0krVlZORVF6b2dNVEF3TURBd01Ed3ZkR1Y0ZEQ0OEwzTjJaejQ9IiwgImF0dHJpYnV0ZXMiOlt7InRyYWl0X3R5cGUiOiJtYXR1cml0eURhdGUiLCJ2YWx1ZSI6MTcwMTgyMDgwMCwiZGlzcGxheV90eXBlIjoiZGF0ZSJ9LHsidHJhaXRfdHlwZSI6InF1b3RlQXNzZXRBbW91bnQiLCJ2YWx1ZSI6MTAwMDAwMCwiZGlzcGxheV90eXBlIjoibnVtYmVyIn0seyJ0cmFpdF90eXBlIjoiYmFzZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAwMDAwMDAwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6Im9wdGlvbnNLaW5kIiwidmFsdWUiOiJjYWxsIn0seyJ0cmFpdF90eXBlIjoid3JpdGVyIiwidmFsdWUiOiIweDdlNzI3NTIwYjI5NzczZTdmMjNhODY2NTY0OTE5N2FhZjA2NGNlZjEifV19"
         );
 
         // make sure token 0 has correct royalty info
@@ -180,6 +180,17 @@ contract OptionsNFTTest is Test {
             abi.encodeWithSelector(
                 nft.quoteAsset().transferFrom.selector,
                 new_owner,
+                address(nft),
+                usdc_amount
+            ),
+            abi.encode(true)
+        );
+
+        vm.mockCall(
+            usdc_address,
+            abi.encodeWithSelector(
+                nft.quoteAsset().transferFrom.selector,
+                address(nft),
                 msg_sender,
                 usdc_amount
             ),
@@ -360,7 +371,7 @@ contract OptionsNFTTest is Test {
         );
         assertEq(
             nft.tokenURI(token_id),
-            "data:application/json;base64,eyJuYW1lIjogIiNEZXJzd2FwIFdFVEgvVVNEQyAjMCIsICJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdkbWxsZDBKdmVEMGlNQ0F3SURJNU1DQTFNREFpUGp4emRIbHNaVDUwWlhoMGUyWnZiblF0YzJsNlpUb3hNbkI0TzJacGJHdzZJMlptWm4wOEwzTjBlV3hsUGp4amJHbHdVR0YwYUNCcFpEMGlZMjl5Ym1WeWN5SStQSEpsWTNRZ2QybGtkR2c5SWpJNU1DSWdhR1ZwWjJoMFBTSTFNREFpSUhKNFBTSTBNaUlnY25rOUlqUXlJaTgrUEM5amJHbHdVR0YwYUQ0OFp5QmpiR2x3TFhCaGRHZzlJblZ5YkNnalkyOXlibVZ5Y3lraVBqeHdZWFJvSUdROUlrMHdJREJvTWprd2RqVXdNRWd3ZWlJdlBqd3ZaejQ4ZEdWNGRDQmpiR0Z6Y3owaWFERWlJSGc5SWpNd0lpQjVQU0kzTUNJZ1ptOXVkQzF6YVhwbFBTSXhOQ0krOEorVGlTQlhSVlJJTDFWVFJFTThMM1JsZUhRK1BIUmxlSFFnZUQwaU56QWlJSGs5SWpJME1DSWdjM1I1YkdVOUltWnZiblF0YzJsNlpUb3hNREJ3ZUNJKzhKK011end2ZEdWNGRENDhkR1Y0ZENCNFBTSXpNQ0lnZVQwaU5EQXdJajVKUkRvZ01Ed3ZkR1Y0ZEQ0OGRHVjRkQ0I0UFNJek1DSWdlVDBpTkRJd0lqNVhSVlJJT2lBeE1EQXdNREF3TURBd01EQXdNREF3TURBd1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTkRBaVBsVlRSRU02SURFd01EQXdNREE4TDNSbGVIUStQQzl6ZG1jKyIsICJhdHRyaWJ1dGVzIjpbeyJ0cmFpdF90eXBlIjoibWF0dXJpdHlEYXRlIiwidmFsdWUiOjE3MDE4MjA5MDAsImRpc3BsYXlfdHlwZSI6ImRhdGUifSx7InRyYWl0X3R5cGUiOiJxdW90ZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6ImJhc2VBc3NldEFtb3VudCIsInZhbHVlIjoxMDAwMDAwMDAwMDAwMDAwMDAwLCJkaXNwbGF5X3R5cGUiOiJudW1iZXIifSx7InRyYWl0X3R5cGUiOiJvcHRpb25zS2luZCIsInZhbHVlIjoicHV0In1dfQ=="
+            "data:application/json;base64,eyJuYW1lIjogIiNEZXN3YXAgV0VUSC9VU0RDICMwIiwgImltYWdlIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1qa3dJaUJvWldsbmFIUTlJalV3TUNJZ2RtbGxkMEp2ZUQwaU1DQXdJREk1TUNBMU1EQWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQSE4wZVd4bFBuUmxlSFI3Wm05dWRDMXphWHBsT2pFeWNIZzdabWxzYkRvalptWm1mVHd2YzNSNWJHVStQR05zYVhCUVlYUm9JR2xrUFNKamIzSnVaWEp6SWo0OGNtVmpkQ0IzYVdSMGFEMGlNamt3SWlCb1pXbG5hSFE5SWpVd01DSWdjbmc5SWpReUlpQnllVDBpTkRJaUx6NDhMMk5zYVhCUVlYUm9QanhuSUdOc2FYQXRjR0YwYUQwaWRYSnNLQ05qYjNKdVpYSnpLU0krUEhCaGRHZ2daRDBpVFRBZ01HZ3lPVEIyTlRBd1NEQjZJaTgrUEM5blBqeDBaWGgwSUdOc1lYTnpQU0pvTVNJZ2VEMGlNekFpSUhrOUlqY3dJaUJtYjI1MExYTnBlbVU5SWpFMElqN3duNU9KSUZkRlZFZ3ZWVk5FUXp3dmRHVjRkRDQ4ZEdWNGRDQjRQU0kzTUNJZ2VUMGlNalF3SWlCemRIbHNaVDBpWm05dWRDMXphWHBsT2pFd01IQjRJajd3bjR5N1BDOTBaWGgwUGp4MFpYaDBJSGc5SWpNd0lpQjVQU0kwTURBaVBrbEVPaUF3UEM5MFpYaDBQangwWlhoMElIZzlJak13SWlCNVBTSTBNakFpUGxkRlZFZzZJREV3TURBd01EQXdNREF3TURBd01EQXdNREE4TDNSbGVIUStQSFJsZUhRZ2VEMGlNekFpSUhrOUlqUTBNQ0krVlZORVF6b2dNVEF3TURBd01Ed3ZkR1Y0ZEQ0OEwzTjJaejQ9IiwgImF0dHJpYnV0ZXMiOlt7InRyYWl0X3R5cGUiOiJtYXR1cml0eURhdGUiLCJ2YWx1ZSI6MTcwMTgyMDkwMCwiZGlzcGxheV90eXBlIjoiZGF0ZSJ9LHsidHJhaXRfdHlwZSI6InF1b3RlQXNzZXRBbW91bnQiLCJ2YWx1ZSI6MTAwMDAwMCwiZGlzcGxheV90eXBlIjoibnVtYmVyIn0seyJ0cmFpdF90eXBlIjoiYmFzZUFzc2V0QW1vdW50IiwidmFsdWUiOjEwMDAwMDAwMDAwMDAwMDAwMDAsImRpc3BsYXlfdHlwZSI6Im51bWJlciJ9LHsidHJhaXRfdHlwZSI6Im9wdGlvbnNLaW5kIiwidmFsdWUiOiJwdXQifSx7InRyYWl0X3R5cGUiOiJ3cml0ZXIiLCJ2YWx1ZSI6IjB4N2U3Mjc1MjBiMjk3NzNlN2YyM2E4NjY1NjQ5MTk3YWFmMDY0Y2VmMSJ9XX0="
         );
 
         // make sure token 0 has correct royalty info
@@ -423,6 +434,17 @@ contract OptionsNFTTest is Test {
             abi.encodeWithSelector(
                 nft.baseAsset().transferFrom.selector,
                 new_owner,
+                address(nft),
+                deposit_weth_amount
+            ),
+            abi.encode(true)
+        );
+
+        vm.mockCall(
+            weth_address,
+            abi.encodeWithSelector(
+                nft.baseAsset().transferFrom.selector,
+                address(nft),
                 msg_sender,
                 deposit_weth_amount
             ),

@@ -266,18 +266,31 @@ contract OptionsNFT is ERC721Royalty {
             : "put";
 
         string memory attributes = string.concat(
-            '[{"trait_type":"maturityDate","value":',
-            Strings.toString(tokenMetadata[tokenId].maturityDate),
-            ',"display_type":"date"},{"trait_type":"quoteAssetAmount","value":',
-            Strings.toString(tokenMetadata[tokenId].quoteAssetAmount),
-            ',"display_type":"number"},{"trait_type":"baseAssetAmount","value":',
-            Strings.toString(tokenMetadata[tokenId].baseAssetAmount),
-            ',"display_type":"number"},',
-            '{"trait_type":"optionsKind","value":',
-            '"',
-            optionsKindAttr,
-            '"',
-            "}]"
+            '[', 
+              '{', 
+                '"trait_type":"maturityDate",',
+                '"value":', Strings.toString(tokenMetadata[tokenId].maturityDate), ',',
+                '"display_type":"date"',
+              '},',
+              '{',
+                '"trait_type":"quoteAssetAmount",',
+                '"value":',Strings.toString(tokenMetadata[tokenId].quoteAssetAmount), ',',
+                '"display_type":"number"',
+              '},',
+              '{',
+                '"trait_type":"baseAssetAmount",',
+                '"value":', Strings.toString(tokenMetadata[tokenId].baseAssetAmount), ',',
+                '"display_type":"number"',
+              '},',
+              '{',
+                '"trait_type":"optionsKind",',
+                '"value":"',optionsKindAttr,'"',
+              '},',
+              '{',
+                '"trait_type":"writer",',
+                '"value":"', Strings.toHexString(tokenMetadata[tokenId].writer),'"',
+              '}',
+            ']'
         );
         string memory tokenPairName = string.concat(
             baseAsset.symbol(),
@@ -285,7 +298,7 @@ contract OptionsNFT is ERC721Royalty {
             quoteAsset.symbol()
         );
         string memory name = string.concat(
-            "#Derswap ",
+            "#Deswap ",
             tokenPairName,
             " #",
             Strings.toString(tokenId)
