@@ -12,6 +12,8 @@ contract DeSwapGovernorScript is Script {
 
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        string memory version = vm.envString("VERSION");
+
         vm.startBroadcast(deployerPrivateKey);
         CREATE3Factory factory = CREATE3Factory(
             0x93FEC2C00BfE902F733B57c5a6CeeD7CD1384AE1
@@ -28,7 +30,7 @@ contract DeSwapGovernorScript is Script {
             args
         );
 
-        bytes32 salt = keccak256(abi.encode("DeSwapGovernor", "v1"));
+        bytes32 salt = keccak256(abi.encode("DeSwapGovernor", version));
         factory.deploy(salt, creationCode);
 
         vm.stopBroadcast();

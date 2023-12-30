@@ -142,7 +142,7 @@ contract OptionsNFT is ERC721Royalty {
         require(!isExercised(tokenId), "ERC721: token already exercised");
 
         // 欧式期权只有到期日才能行权
-        // 临时注释，方便调试，上线时加回去
+        // TODO: 临时注释，方便调试，上线时加回去
         // require(
         //     block.timestamp >= tokenMetadata[tokenId].maturityDate,
         //     "ERC721: token not matured yet"
